@@ -5,6 +5,8 @@ import {useImagesStore} from '@/stores/images';
 import {Button} from '@/components/ui/button';
 import {CanvasEditor} from '@/components/canvas-editor';
 import {useEditorStore} from '@/stores/editor';
+import {TemplateGallery} from '@/components/template-gallery';
+import {SavedDesigns} from '@/components/saved-designs';
 
 export function ImageEditor() {
   const t = useTranslations('Editor');
@@ -20,6 +22,8 @@ export function ImageEditor() {
   const setFitMode = useEditorStore((s) => s.setFitMode);
   const showSafeMargins = useEditorStore((s) => s.showSafeMargins);
   const setShowSafeMargins = useEditorStore((s) => s.setShowSafeMargins);
+  const textLayers = useEditorStore((s) => s.textLayers);
+  const updateText = useEditorStore((s) => s.updateText);
 
   const selected = images.find((i) => i.id === selectedId);
 
@@ -83,6 +87,8 @@ export function ImageEditor() {
         </label>
       </div>
 
+      <TemplateGallery />
+
       <div className="relative bg-muted rounded-lg border overflow-hidden min-h-72">
         {selected ? (
           <CanvasEditor />
@@ -98,6 +104,27 @@ export function ImageEditor() {
           {t('editImage')}
         </Button>
       </div>
+
+      <div className="space-y-2">
+        <h3 className="text-lg font-medium">{t('textContent')}</h3>
+        <div className="grid gap-3">
+          {textLayers.map((tl) => (
+            <div key={tl.id} className="grid gap-1">
+              <label className="text-xs text-muted-foreground" htmlFor={`tl-${tl.id}`}>
+                {tl.id}
+              </label>
+              <input
+                id={`tl-${tl.id}`}
+                className="h-9 rounded-md border bg-background px-3 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                value={tl.text}
+                onChange={(e) => updateText(tl.id, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <SavedDesigns />
     </div>
   );
 }

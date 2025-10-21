@@ -1,6 +1,7 @@
 "use client";
 
 import {create} from 'zustand';
+import {persist} from 'zustand/middleware';
 
 export type PresetId = 'instagram-square' | 'linkedin-landscape';
 
@@ -43,6 +44,7 @@ export type EditorState = {
   setShowSafeMargins: (show: boolean) => void;
   setSafeMarginRatio: (ratio: number) => void;
 
+  setTextLayers: (layers: TextLayer[]) => void;
   updateTextPosition: (id: string, x: number, y: number, stageW: number, stageH: number) => void;
   updateText: (id: string, text: string) => void;
 };
@@ -51,7 +53,7 @@ function clamp(val: number, min: number, max: number) {
   return Math.max(min, Math.min(max, val));
 }
 
-export const useEditorStore = create<EditorState>((set) => ({
+const initialState: Omit<EditorState, 'setPreset' | 'setAspectLocked' | 'setFitMode' | 'setShowSafeMargins' | 'setSafeMarginRatio' | 'setTextLayers' | 'updateTextPosition' | 'updateText'> = {
   presetId: 'instagram-square',
   aspectLocked: true,
   fitMode: 'cover',
@@ -76,23 +78,41 @@ export const useEditorStore = create<EditorState>((set) => ({
       fontScale: 0.035,
       align: 'left'
     }
-  ],
+  ]
+};
 
-  setPreset: (id) => set({presetId: id}),
-  setAspectLocked: (locked) => set({aspectLocked: locked}),
-  setFitMode: (mode) => set({fitMode: mode}),
-  setShowSafeMargins: (show) => set({showSafeMargins: show}),
-  setSafeMarginRatio: (ratio) => set({safeMarginRatio: ratio}),
+export const useEditorStore = create<EditorState>()(
+  persist(
+    (set) => ({
+      ...initialState,
+      setPreset: (id) => set({presetId: id}),
+      setAspectLocked: (locked) => set({aspectLocked: locked}),
+      setFitMode: (mode) => set({fitMode: mode}),
+      setShowSafeMargins: (show) => set({showSafeMargins: show}),
+      setSafeMarginRatio: (ratio) => set({safeMarginRatio: ratio}),
+      setTextLayers: (layers) => set({textLayers: layers}),
 
-  updateTextPosition: (id, x, y, stageW, stageH) =>
-    set((s) => {
-      const xFrac = clamp(x / stageW, 0, 1);
-      const yFrac = clamp(y / stageH, 0, 1);
-      return {
-        textLayers: s.textLayers.map((tl) => (tl.id === id ? {...tl, xFrac, yFrac} : tl))
-      };
+      updateTextPosition: (id, x, y, stageW, stageH) =>
+        set((s) => {
+          const xFrac = clamp(x / stageW, 0, 1);
+          const yFrac = clamp(y / stageH, 0, 1);
+          return {
+            textLayers: s.textLayers.map((tl) => (tl.id === id ? {...tl, xFrac, yFrac} : tl))
+          };
+        }),
+
+      updateText: (id, text) => set((s) => ({textLayers: s.textLayers.map((tl) => (tl.id === id ? {...tl, text} : tl))}))
     }),
-
-  updateText: (id, text) =>
-    set((s) => ({textLayers: s.textLayers.map((tl) => (tl.id === id ? {...tl, text} : tl))}))
-}));
+    {
+      name: 'editor-state-v1',
+      partialize: (s) => ({
+        presetId: s.presetId,
+        aspectLocked: s.aspectLocked,
+        fitMode: s.fitMode,
+        safeMarginRatio: s.safeMarginRatio,
+        showSafeMargins: s.showSafeMargins,
+        textLayers: s.textLayers
+      })
+    }
+  )
+);

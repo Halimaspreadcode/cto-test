@@ -38,7 +38,20 @@
     "cancel": "Cancel",
     "zoom": "Zoom",
     "preview": "Preview",
-    "openEditor": "Open editor"
+    "openEditor": "Open editor",
+    "textContent": "Text content"
+  },
+  "Templates": {
+    "title": "Templates",
+    "use": "Use"
+  },
+  "Saved": {
+    "title": "Saved designs",
+    "save": "Save design",
+    "empty": "No saved designs yet",
+    "load": "Load",
+    "delete": "Delete",
+    "untitled": "Untitled"
   },
   "Footer": {
     "builtWith": "Built with Next.js, Tailwind CSS and next-intl"

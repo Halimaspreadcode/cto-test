@@ -38,7 +38,20 @@
     "cancel": "Annuler",
     "zoom": "Zoom",
     "preview": "Aperçu",
-    "openEditor": "Ouvrir l'éditeur"
+    "openEditor": "Ouvrir l'éditeur",
+    "textContent": "Contenu du texte"
+  },
+  "Templates": {
+    "title": "Modèles",
+    "use": "Utiliser"
+  },
+  "Saved": {
+    "title": "Conceptions enregistrées",
+    "save": "Enregistrer",
+    "empty": "Aucune conception enregistrée pour le moment",
+    "load": "Charger",
+    "delete": "Supprimer",
+    "untitled": "Sans titre"
   },
   "Footer": {
     "builtWith": "Construit avec Next.js, Tailwind CSS et next-intl"
