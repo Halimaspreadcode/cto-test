@@ -1,11 +1,14 @@
 import {getTranslations} from 'next-intl/server';
 import {Button} from '@/components/ui/button';
 import {Counter} from '@/components/counter';
+
 import {ImageUploadDropzone} from '@/components/image-upload-dropzone';
 import {PreviewGrid} from '@/components/preview-grid';
 import {ImageEditor} from '@/components/editor';
 import {ExportControls} from '@/components/export-controls';
 import {CropModal} from '@/components/crop-modal';
+import {ThemeIndicator} from '@/components/theme-indicator';
+
 
 export default async function HomePage() {
   const t = await getTranslations('Home');
@@ -17,6 +20,8 @@ export default async function HomePage() {
         <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground max-w-prose">{t('description')}</p>
       </div>
+
+      <ThemeIndicator />
 
       <div className="flex items-center gap-4">
         <Counter label={t('counter')} />
