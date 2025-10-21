@@ -1,0 +1,17 @@
+{
+  "Nav": {
+    "home": "Accueil",
+    "theme": "Thème",
+    "language": "Langue"
+  },
+  "Home": {
+    "title": "Bienvenue",
+    "description": "Ceci est un starter Next.js 14 avec i18n, Tailwind, shadcn/ui et theming.",
+    "counter": "Compteur",
+    "increment": "+1",
+    "decrement": "-1"
+  },
+  "Footer": {
+    "builtWith": "Construit avec Next.js, Tailwind CSS et next-intl"
+  }
+}
