@@ -4,6 +4,7 @@ import Link from 'next-intl/link';
 import {useTranslations} from 'next-intl';
 import {ThemeToggle} from '@/components/theme-toggle';
 import {LanguageSwitcher} from '@/components/language-switcher';
+import {ThemePicker} from '@/components/theme-picker';
 
 export function SiteHeader() {
   const t = useTranslations('Nav');
@@ -18,6 +19,7 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
+          <ThemePicker />
           <ThemeToggle />
         </div>
       </div>
