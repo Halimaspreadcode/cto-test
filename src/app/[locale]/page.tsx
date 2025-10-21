@@ -4,6 +4,7 @@ import {Counter} from '@/components/counter';
 import {ImageUploadDropzone} from '@/components/image-upload-dropzone';
 import {PreviewGrid} from '@/components/preview-grid';
 import {ImageEditor} from '@/components/editor';
+import {ExportControls} from '@/components/export-controls';
 import {CropModal} from '@/components/crop-modal';
 
 export default async function HomePage() {
@@ -37,6 +38,7 @@ export default async function HomePage() {
         <ImageUploadDropzone />
         <PreviewGrid />
         <ImageEditor />
+        <ExportControls />
       </div>
 
       <CropModal />
