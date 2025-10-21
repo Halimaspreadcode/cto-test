@@ -40,6 +40,19 @@
     "zoom": "Zoom",
     "preview": "Preview",
     "openEditor": "Open editor",
+    "textContent": "Text content"
+  },
+  "Templates": {
+    "title": "Templates",
+    "use": "Use"
+  },
+  "Saved": {
+    "title": "Saved designs",
+    "save": "Save design",
+    "empty": "No saved designs yet",
+    "load": "Load",
+    "delete": "Delete",
+    "untitled": "Untitled"
     "slidePresetOverride": "Slide preset",
     "slideFitOverride": "Slide image fit",
     "default": "Default",

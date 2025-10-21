@@ -8,6 +8,8 @@ import {Button} from '@/components/ui/button';
 import {PRESETS, THEME_COLORS, THEME_FONTS, useCanvasStore, type LayerText, type PresetId} from '@/stores/canvas';
 import {CanvasEditor} from '@/components/canvas-editor';
 import {useEditorStore} from '@/stores/editor';
+import {TemplateGallery} from '@/components/template-gallery';
+import {SavedDesigns} from '@/components/saved-designs';
 import {SlidesNavigator} from '@/components/slides-navigator';
 import {useSlidesStore} from '@/stores/slides';
         
@@ -47,6 +49,8 @@ export function ImageEditor() {
   const setFitModeDefault = useEditorStore((s) => s.setFitMode);
   const showSafeMargins = useEditorStore((s) => s.showSafeMargins);
   const setShowSafeMargins = useEditorStore((s) => s.setShowSafeMargins);
+  const textLayers = useEditorStore((s) => s.textLayers);
+  const updateText = useEditorStore((s) => s.updateText);
 
   // Slides store
   const selectedSlide = useSlidesStore((s) => s.getSelectedSlide());
@@ -358,6 +362,7 @@ export function ImageEditor() {
         </label>
       </div>
 
+      <TemplateGallery />
       {selectedSlide && (
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
@@ -414,6 +419,26 @@ export function ImageEditor() {
         </Button>
       </div>
 
+      <div className="space-y-2">
+        <h3 className="text-lg font-medium">{t('textContent')}</h3>
+        <div className="grid gap-3">
+          {textLayers.map((tl) => (
+            <div key={tl.id} className="grid gap-1">
+              <label className="text-xs text-muted-foreground" htmlFor={`tl-${tl.id}`}>
+                {tl.id}
+              </label>
+              <input
+                id={`tl-${tl.id}`}
+                className="h-9 rounded-md border bg-background px-3 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                value={tl.text}
+                onChange={(e) => updateText(tl.id, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <SavedDesigns />
       {/* Canvas + Side panel */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
         <div className="relative rounded-lg border bg-muted flex items-center justify-center p-3">
