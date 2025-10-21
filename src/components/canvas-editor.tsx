@@ -4,6 +4,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {Stage, Layer, Rect, Image as KImage, Text as KText, Group} from 'react-konva';
 import {useImagesStore} from '@/stores/images';
 import {PRESETS, useEditorStore} from '@/stores/editor';
+import {useSlidesStore} from '@/stores/slides';
 
 function useHtmlImage(url?: string) {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -54,54 +55,82 @@ function useContainerSize<T extends HTMLElement>() {
 }
 
 export function CanvasEditor() {
-  const selectedId = useImagesStore((s) => s.selectedId);
-  const images = useImagesStore((s) => s.images);
-  const selected = useMemo(() => images.find((i) => i.id === selectedId), [images, selectedId]);
-  const imageUrl = selected?.croppedUrl ?? selected?.src;
+  const slides = useSlidesStore((s) => s.slides);
+  const selectedSlideId = useSlidesStore((s) => s.selectedId);
+  const ensureTextLayersForSelected = useSlidesStore((s) => s.ensureTextLayersForSelected);
+  const updateSlideTextPos = useSlidesStore((s) => s.updateTextPosition);
 
-  const presetId = useEditorStore((s) => s.presetId);
-  const fitMode = useEditorStore((s) => s.fitMode);
+  const images = useImagesStore((s) => s.images);
+
+  const presetDefaultId = useEditorStore((s) => s.presetId);
+  const fitModeDefault = useEditorStore((s) => s.fitMode);
   const safeMarginRatio = useEditorStore((s) => s.safeMarginRatio);
   const showSafeMargins = useEditorStore((s) => s.showSafeMargins);
-  const textLayers = useEditorStore((s) => s.textLayers);
-  const updateTextPosition = useEditorStore((s) => s.updateTextPosition);
+  const defaultTextLayers = useEditorStore((s) => s.textLayers);
 
-  const preset = PRESETS[presetId];
+  const selectedSlide = useMemo(() => slides.find((sl) => sl.id === selectedSlideId), [slides, selectedSlideId]);
+
+  const backgroundImgUrl = useMemo(() => {
+    if (!selectedSlide?.backgroundImageId) return undefined;
+    const img = images.find((i) => i.id === selectedSlide.backgroundImageId);
+    return img?.croppedUrl ?? img?.src;
+  }, [images, selectedSlide?.backgroundImageId]);
+
+  const effectivePresetId = selectedSlide?.presetOverride ?? presetDefaultId;
+  const effectiveFitMode = selectedSlide?.fitModeOverride ?? fitModeDefault;
+  const effectiveTextLayers = selectedSlide?.textLayers ?? defaultTextLayers;
+
+  const preset = PRESETS[effectivePresetId];
 
   const {ref, width: containerW} = useContainerSize<HTMLDivElement>();
 
   const stageW = Math.max(200, Math.floor(containerW));
   const stageH = Math.floor(stageW * (preset.height / preset.width));
 
-  const image = useHtmlImage(imageUrl);
+  const image = useHtmlImage(backgroundImgUrl);
 
   const marginPx = Math.round(safeMarginRatio * Math.min(stageW, stageH));
 
   // Clamp text layers into safe area when preset changes or container size changes
   useEffect(() => {
-    textLayers.forEach((layer) => {
+    if (!selectedSlideId) return;
+    if (!selectedSlide?.textLayers) {
+      // create slide-local layers from defaults on first interaction
+      ensureTextLayersForSelected(defaultTextLayers);
+    }
+    effectiveTextLayers.forEach((layer) => {
       const x = layer.xFrac * stageW;
       const y = layer.yFrac * stageH;
       const xClamped = Math.min(Math.max(x, marginPx), stageW - marginPx);
       const yClamped = Math.min(Math.max(y, marginPx), stageH - marginPx);
-      if (x !== xClamped || y !== yClamped) {
-        updateTextPosition(layer.id, xClamped, yClamped, stageW, stageH);
+      const xFrac = stageW === 0 ? layer.xFrac : xClamped / stageW;
+      const yFrac = stageH === 0 ? layer.yFrac : yClamped / stageH;
+      if (xFrac !== layer.xFrac || yFrac !== layer.yFrac) {
+        updateSlideTextPos(layer.id, xFrac, yFrac);
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [presetId, stageW, stageH, marginPx]);
+  }, [effectivePresetId, stageW, stageH, marginPx, selectedSlideId]);
 
   const fit = useMemo(() => {
     if (!image) return null;
     const iw = image.width;
     const ih = image.height;
-    const scale = fitMode === 'cover' ? Math.max(stageW / iw, stageH / ih) : Math.min(stageW / iw, stageH / ih);
+    const scale = effectiveFitMode === 'cover' ? Math.max(stageW / iw, stageH / ih) : Math.min(stageW / iw, stageH / ih);
     const w = iw * scale;
     const h = ih * scale;
     const x = (stageW - w) / 2;
     const y = (stageH - h) / 2;
     return {x, y, w, h};
-  }, [image, fitMode, stageW, stageH]);
+  }, [image, effectiveFitMode, stageW, stageH]);
+
+  if (!selectedSlide) {
+    return (
+      <div className="h-72 flex items-center justify-center">
+        <span className="text-muted-foreground text-sm">No slide selected</span>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} className="w-full">
@@ -129,7 +158,7 @@ export function CanvasEditor() {
 
             {/* Text layers */}
             <Group>
-              {textLayers.map((tl) => {
+              {effectiveTextLayers.map((tl) => {
                 const x = tl.xFrac * stageW;
                 const y = tl.yFrac * stageH;
                 const width = tl.widthFrac * stageW;
@@ -153,7 +182,10 @@ export function CanvasEditor() {
                     }}
                     onDragEnd={(e) => {
                       const node = e.target;
-                      updateTextPosition(tl.id, node.x(), node.y(), stageW, stageH);
+                      ensureTextLayersForSelected(defaultTextLayers);
+                      const xFrac = stageW === 0 ? tl.xFrac : node.x() / stageW;
+                      const yFrac = stageH === 0 ? tl.yFrac : node.y() / stageH;
+                      updateSlideTextPos(tl.id, xFrac, yFrac);
                     }}
                   />
                 );
