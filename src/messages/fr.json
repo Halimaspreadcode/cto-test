@@ -40,6 +40,25 @@
     "preview": "Aperçu",
     "openEditor": "Ouvrir l'éditeur"
   },
+  "Exporter": {
+    "title": "Exporter des assets sociaux",
+    "presetLabel": "Préréglage",
+    "preset.instagram": "Instagram (carré 1080×1080)",
+    "preset.linkedin": "LinkedIn (paysage 1200×627)",
+    "formatLabel": "Format",
+    "format.png": "PNG (transparence)",
+    "format.jpeg": "JPEG",
+    "resolutionLabel": "Résolution",
+    "titleLabel": "Titre (pour le nom de fichier)",
+    "titlePlaceholder": "ex: campagne_ete",
+    "transparentBg": "Transparence du fond",
+    "previewLabel": "Aperçu – {size} @ {scale}",
+    "exportButton": "Exporter",
+    "noImageError": "Aucune image sélectionnée à exporter.",
+    "exportError": "Désolé, l’export a échoué. Merci de réessayer ou d’essayer un autre format.",
+    "imageLoadError": "Impossible de charger l’image.",
+    "defaultTitle": "sans_titre"
+  },
   "Footer": {
     "builtWith": "Construit avec Next.js, Tailwind CSS et next-intl"
   }

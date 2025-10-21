@@ -40,6 +40,25 @@
     "preview": "Preview",
     "openEditor": "Open editor"
   },
+  "Exporter": {
+    "title": "Export social assets",
+    "presetLabel": "Preset",
+    "preset.instagram": "Instagram (square 1080×1080)",
+    "preset.linkedin": "LinkedIn (landscape 1200×627)",
+    "formatLabel": "Format",
+    "format.png": "PNG (transparency)",
+    "format.jpeg": "JPEG",
+    "resolutionLabel": "Resolution",
+    "titleLabel": "Title (for filename)",
+    "titlePlaceholder": "e.g. summer_campaign",
+    "transparentBg": "Transparent background",
+    "previewLabel": "Preview – {size} @ {scale}",
+    "exportButton": "Export",
+    "noImageError": "No image selected to export.",
+    "exportError": "Sorry, export failed. Please try again or choose another format.",
+    "imageLoadError": "Unable to load the image.",
+    "defaultTitle": "untitled"
+  },
   "Footer": {
     "builtWith": "Built with Next.js, Tailwind CSS and next-intl"
   }
