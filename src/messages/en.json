@@ -11,6 +11,27 @@
     "increment": "Increment",
     "decrement": "Decrement"
   },
+  "Uploader": {
+    "title": "Image upload",
+    "subtitle": "Drag and drop PNG or JPG images, or click to select.",
+    "dropHere": "Drop files here...",
+    "browse": "Browse",
+    "errorTitle": "Import errors",
+    "invalidType": "Invalid file: {name}. Only PNG and JPG files are accepted.",
+    "remove": "Remove",
+    "select": "Select",
+    "edit": "Edit"
+  },
+  "Editor": {
+    "editorTitle": "Image editor",
+    "noSelection": "No image selected",
+    "editImage": "Edit image",
+    "apply": "Save crop",
+    "cancel": "Cancel",
+    "zoom": "Zoom",
+    "preview": "Preview",
+    "openEditor": "Open editor"
+  },
   "Footer": {
     "builtWith": "Built with Next.js, Tailwind CSS and next-intl"
   }
