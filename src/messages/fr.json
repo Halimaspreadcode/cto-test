@@ -11,6 +11,35 @@
     "increment": "+1",
     "decrement": "-1"
   },
+  "Uploader": {
+    "title": "Téléversement d'images",
+    "subtitle": "Glissez-déposez des images PNG ou JPG, ou cliquez pour sélectionner.",
+    "dropHere": "Déposez les fichiers ici...",
+    "browse": "Parcourir",
+    "errorTitle": "Erreurs d'import",
+    "invalidType": "Fichier non valide: {name}. Seuls les fichiers PNG et JPG sont acceptés.",
+    "remove": "Supprimer",
+    "select": "Sélectionner",
+    "edit": "Modifier"
+  },
+  "Editor": {
+    "editorTitle": "Éditeur d'image",
+    "preset": "Préréglage",
+    "instagramSquare": "Instagram 1080×1080",
+    "linkedinLandscape": "LinkedIn 1200×627",
+    "aspectLock": "Verrouiller le ratio",
+    "fitMode": "Ajustement de l'image",
+    "cover": "Remplir",
+    "contain": "Contenir",
+    "safeMargins": "Marges de sécurité",
+    "noSelection": "Aucune image sélectionnée",
+    "editImage": "Modifier l'image",
+    "apply": "Enregistrer le recadrage",
+    "cancel": "Annuler",
+    "zoom": "Zoom",
+    "preview": "Aperçu",
+    "openEditor": "Ouvrir l'éditeur"
+  },
   "Footer": {
     "builtWith": "Construit avec Next.js, Tailwind CSS et next-intl"
   }

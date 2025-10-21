@@ -1,10 +1,17 @@
 import {getTranslations} from 'next-intl/server';
 import {Button} from '@/components/ui/button';
 import {Counter} from '@/components/counter';
+
+import {ImageUploadDropzone} from '@/components/image-upload-dropzone';
+import {PreviewGrid} from '@/components/preview-grid';
+import {ImageEditor} from '@/components/editor';
+import {CropModal} from '@/components/crop-modal';
 import {ThemeIndicator} from '@/components/theme-indicator';
+
 
 export default async function HomePage() {
   const t = await getTranslations('Home');
+  const tu = await getTranslations('Uploader');
 
   return (
     <section className="space-y-6">
@@ -29,6 +36,15 @@ export default async function HomePage() {
           </Button>
         </div>
       </div>
+
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">{tu('title')}</h2>
+        <ImageUploadDropzone />
+        <PreviewGrid />
+        <ImageEditor />
+      </div>
+
+      <CropModal />
     </section>
   );
 }
