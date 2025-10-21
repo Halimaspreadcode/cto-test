@@ -33,12 +33,17 @@
     "contain": "Contain",
     "safeMargins": "Safe margins",
     "noSelection": "No image selected",
+    "noSlide": "No slide selected",
     "editImage": "Edit image",
     "apply": "Save crop",
     "cancel": "Cancel",
     "zoom": "Zoom",
     "preview": "Preview",
-    "openEditor": "Open editor"
+    "openEditor": "Open editor",
+    "slidePresetOverride": "Slide preset",
+    "slideFitOverride": "Slide image fit",
+    "default": "Default",
+    "useSelectedAsBackground": "Use selected as background"
   },
   "Footer": {
     "builtWith": "Built with Next.js, Tailwind CSS and next-intl"
