@@ -1,0 +1,17 @@
+{
+  "Nav": {
+    "home": "Home",
+    "theme": "Theme",
+    "language": "Language"
+  },
+  "Home": {
+    "title": "Welcome",
+    "description": "This is a Next.js 14 starter with i18n, Tailwind, shadcn/ui, and theming.",
+    "counter": "Counter",
+    "increment": "Increment",
+    "decrement": "Decrement"
+  },
+  "Footer": {
+    "builtWith": "Built with Next.js, Tailwind CSS and next-intl"
+  }
+}
