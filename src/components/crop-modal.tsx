@@ -6,6 +6,7 @@ import {useTranslations} from 'next-intl';
 import {useImagesStore} from '@/stores/images';
 import {Button} from '@/components/ui/button';
 import {cropImageToBlob} from '@/lib/cropImage';
+import {PRESETS, useEditorStore} from '@/stores/editor';
 
 export function CropModal() {
   const t = useTranslations('Editor');
@@ -19,6 +20,11 @@ export function CropModal() {
   const applyCroppedUrl = useImagesStore((s) => s.applyCroppedUrl);
 
   const selected = useMemo(() => images.find((i) => i.id === selectedId), [images, selectedId]);
+
+  const presetId = useEditorStore((s) => s.presetId);
+  const aspectLocked = useEditorStore((s) => s.aspectLocked);
+  const preset = PRESETS[presetId];
+  const aspect = aspectLocked ? preset.width / preset.height : undefined;
 
   const onCropComplete = useCallback(
     (_: Area, croppedAreaPixels: Area) => {
@@ -55,7 +61,7 @@ export function CropModal() {
             image={selected.src}
             crop={selected.crop ?? {x: 0, y: 0}}
             zoom={selected.zoom ?? 1}
-            aspect={1}
+            aspect={aspect}
             onCropChange={updateCrop}
             onZoomChange={updateZoom}
             onCropComplete={onCropComplete}
