@@ -8,6 +8,8 @@ import {Button} from '@/components/ui/button';
 import {PRESETS, THEME_COLORS, THEME_FONTS, useCanvasStore, type LayerText, type PresetId} from '@/stores/canvas';
 import {CanvasEditor} from '@/components/canvas-editor';
 import {useEditorStore} from '@/stores/editor';
+import {SlidesNavigator} from '@/components/slides-navigator';
+import {useSlidesStore} from '@/stores/slides';
         
 function useHtmlImage(url?: string) {
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -30,20 +32,29 @@ function useHtmlImage(url?: string) {
 
 export function ImageEditor() {
   const t = useTranslations('Editor');
-  const selectedId = useImagesStore((s) => s.selectedId);
+
+  // Images store for background selection and cropping
   const images = useImagesStore((s) => s.images);
+  const imageSelectedId = useImagesStore((s) => s.selectedId);
   const openCropModal = useImagesStore((s) => s.openCropModal);
 
+  // Global editor defaults (bulk actions)
   const presetId = useEditorStore((s) => s.presetId);
   const setPreset = useEditorStore((s) => s.setPreset);
   const aspectLocked = useEditorStore((s) => s.aspectLocked);
   const setAspectLocked = useEditorStore((s) => s.setAspectLocked);
-  const fitMode = useEditorStore((s) => s.fitMode);
-  const setFitMode = useEditorStore((s) => s.setFitMode);
+  const fitModeDefault = useEditorStore((s) => s.fitMode);
+  const setFitModeDefault = useEditorStore((s) => s.setFitMode);
   const showSafeMargins = useEditorStore((s) => s.showSafeMargins);
   const setShowSafeMargins = useEditorStore((s) => s.setShowSafeMargins);
 
-  const selected = images.find((i) => i.id === selectedId);
+  // Slides store
+  const selectedSlide = useSlidesStore((s) => s.getSelectedSlide());
+  const setSlideBackground = useSlidesStore((s) => s.setBackgroundForSelected);
+  const setSlidePresetOverride = useSlidesStore((s) => s.setPresetOverrideForSelected);
+  const setSlideFitOverride = useSlidesStore((s) => s.setFitModeOverrideForSelected);
+
+  const selectedBackground = images.find((i) => i.id === selectedSlide?.backgroundImageId);
 
   const presetId = useCanvasStore((s) => s.presetId);
   const layers = useCanvasStore((s) => s.layers);
@@ -250,6 +261,11 @@ export function ImageEditor() {
   };
 
   return (
+    <div className="mt-8 space-y-6">
+      <h2 className="text-xl font-semibold">{t('editorTitle')}</h2>
+
+      <SlidesNavigator />
+
     <div className="mt-8 space-y-4" ref={containerRef} tabIndex={0} onKeyDown={onKeyDown} aria-label="Éditeur de canevas">
       <h2 className="text-xl font-semibold">{t('editorTitle')}</h2>
 
@@ -320,16 +336,16 @@ export function ImageEditor() {
             <Button
               type="button"
               size="sm"
-              variant={fitMode === 'cover' ? 'default' : 'outline'}
-              onClick={() => setFitMode('cover')}
+              variant={fitModeDefault === 'cover' ? 'default' : 'outline'}
+              onClick={() => setFitModeDefault('cover')}
             >
               {t('cover')}
             </Button>
             <Button
               type="button"
               size="sm"
-              variant={fitMode === 'contain' ? 'default' : 'outline'}
-              onClick={() => setFitMode('contain')}
+              variant={fitModeDefault === 'contain' ? 'default' : 'outline'}
+              onClick={() => setFitModeDefault('contain')}
             >
               {t('contain')}
             </Button>
@@ -342,18 +358,58 @@ export function ImageEditor() {
         </label>
       </div>
 
+      {selectedSlide && (
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">{t('slidePresetOverride')}</span>
+            <div className="flex gap-2">
+              <Button type="button" size="sm" variant={selectedSlide.presetOverride ? 'outline' : 'default'} onClick={() => setSlidePresetOverride(undefined)}>
+                {t('default')}
+              </Button>
+              <Button type="button" size="sm" variant={selectedSlide.presetOverride === 'instagram-square' ? 'default' : 'outline'} onClick={() => setSlidePresetOverride('instagram-square')}>
+                {t('instagramSquare')}
+              </Button>
+              <Button type="button" size="sm" variant={selectedSlide.presetOverride === 'linkedin-landscape' ? 'default' : 'outline'} onClick={() => setSlidePresetOverride('linkedin-landscape')}>
+                {t('linkedinLandscape')}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">{t('slideFitOverride')}</span>
+            <div className="flex gap-2">
+              <Button type="button" size="sm" variant={selectedSlide.fitModeOverride ? 'outline' : 'default'} onClick={() => setSlideFitOverride(undefined)}>
+                {t('default')}
+              </Button>
+              <Button type="button" size="sm" variant={selectedSlide.fitModeOverride === 'cover' ? 'default' : 'outline'} onClick={() => setSlideFitOverride('cover')}>
+                {t('cover')}
+              </Button>
+              <Button type="button" size="sm" variant={selectedSlide.fitModeOverride === 'contain' ? 'default' : 'outline'} onClick={() => setSlideFitOverride('contain')}>
+                {t('contain')}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" onClick={() => setSlideBackground(imageSelectedId)} disabled={!imageSelectedId}>
+              {t('useSelectedAsBackground')}
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="relative bg-muted rounded-lg border overflow-hidden min-h-72">
-        {selected ? (
+        {selectedSlide ? (
           <CanvasEditor />
         ) : (
           <div className="h-72 flex items-center justify-center">
-            <span className="text-muted-foreground text-sm">{t('noSelection')}</span>
+            <span className="text-muted-foreground text-sm">{t('noSlide')}</span>
           </div>
         )}
       </div>
 
       <div>
-        <Button onClick={() => openCropModal()} disabled={!selected}>
+        <Button onClick={() => openCropModal(selectedSlide?.backgroundImageId)} disabled={!selectedBackground}>
           {t('editImage')}
         </Button>
       </div>

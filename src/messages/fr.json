@@ -33,12 +33,17 @@
     "contain": "Contenir",
     "safeMargins": "Marges de sécurité",
     "noSelection": "Aucune image sélectionnée",
+    "noSlide": "Aucune diapositive sélectionnée",
     "editImage": "Modifier l'image",
     "apply": "Enregistrer le recadrage",
     "cancel": "Annuler",
     "zoom": "Zoom",
     "preview": "Aperçu",
-    "openEditor": "Ouvrir l'éditeur"
+    "openEditor": "Ouvrir l'éditeur",
+    "slidePresetOverride": "Préréglage de la diapositive",
+    "slideFitOverride": "Ajustement de la diapositive",
+    "default": "Par défaut",
+    "useSelectedAsBackground": "Utiliser la sélection en arrière-plan"
   },
   "Exporter": {
     "title": "Exporter des assets sociaux",

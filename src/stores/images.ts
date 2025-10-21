@@ -1,6 +1,7 @@
 "use client";
 
 import {create} from 'zustand';
+import {useSlidesStore} from './slides';
 
 export type CropAreaPixels = {
   x: number;
@@ -91,6 +92,11 @@ export const useImagesStore = create<ImagesState>((set, get) => ({
         if (img.croppedUrl) URL.revokeObjectURL(img.croppedUrl);
       } catch {}
     }
+    // Detach from any slides that reference this image
+    try {
+      const slidesApi = useSlidesStore.getState();
+      slidesApi.detachBackgroundForImage(id);
+    } catch {}
     set((s) => ({
       images: s.images.filter((i) => i.id !== id),
       selectedId: s.selectedId === id ? undefined : s.selectedId
