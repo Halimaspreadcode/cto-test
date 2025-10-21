@@ -1,5 +1,5 @@
 import type {Metadata} from 'next';
-import {Poppins, Raleway} from 'next/font/google';
+import {Poppins, Raleway, Inter, Nunito, Montserrat, Playfair_Display, Lora} from 'next/font/google';
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
 import '../../styles/globals.css';
@@ -18,6 +18,41 @@ const raleway = Raleway({
   weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
   variable: '--font-heading'
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-sans-inter'
+});
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-sans-nunito'
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  display: 'swap',
+  variable: '--font-heading-montserrat'
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-heading-playfair'
+});
+
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-heading-lora'
 });
 
 export const metadata: Metadata = {
@@ -40,7 +75,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={params.locale} suppressHydrationWarning className={`${poppins.variable} ${raleway.variable}`}>
+    <html lang={params.locale} suppressHydrationWarning className={`${poppins.variable} ${raleway.variable} ${inter.variable} ${nunito.variable} ${montserrat.variable} ${playfair.variable} ${lora.variable}`}>
       <body>
         <NextIntlClientProvider messages={messages} locale={params.locale}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
